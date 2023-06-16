@@ -1,0 +1,22 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Blog</title>
+</head>
+<body>
+<h1 style="text-align:center">New post</h1>
+<div style="display:flex;justify-content:center;">
+    <form th:action="@{/create-post}" method="post" class="form-container">
+        <input placeholder="Title" name="title" type="text" style="width:1400px;"/><br>
+        <input placeholder="Tags" name="allTags" type="text" style="width:1400px;"/><br>
+        <textarea name="content" rows="40" style="width:1400px;"></textarea><br>
+        <div style="position:relative;left:664px;top:10px;">
+            <button style="align-self:center" type="submit" >Publish</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

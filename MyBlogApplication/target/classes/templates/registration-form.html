@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration form</title>
+    <style>
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .main{
+        padding-top:0px
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="main">
+    <h1>Create account</h1>
+    <form th:action="@{register-user}" method="post">
+        <input type="text" name="name" placeholder="Name" required/><br>
+        <input type="email" name="email" placeholder="Email" required/><br>
+        <input type="password" name="password" placeholder="Password" required/><br>
+        <input type="password" name="confirm-password" placeholder="Confirm Password" required/><br>
+        <div style="color:red;" th:text="${emailPresent}"></div>
+        <br>
+        <div style="color:red;" th:text="${passwordMissMatch}"></div>
+        <br>
+        <button type="submit">Register</button>
+        <p>Have account?<a href="/login">login</a></p>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/update-comment}" th:object="${commentAttribute}" method="post"
+      style="display:flex;justify-content:center;">
+    <input type="hidden" name="commentId" th:value="${id}">
+    <input type="hidden" name="postId" th:value="${post.id}">
+    <div>
+        <div>
+            Name: <input type="text" id="name" name="name" readonly="readonly" th:value="${commentAttribute.name}"
+                         style="height: 34px;position: relative;left: 24px;width: 282px;"><br>
+        </div>
+        <div>
+            Comment: <input type="text" id="comment" name="comment" th:value="${commentAttribute.comment}"
+                            style="height: 37px;width: 282px;">
+        </div>
+        <div>
+            <input type="submit" value="update" style=" position: relative; height: 24px;width: 85px;">
+        </div>
+    </div>
+</form>
+</body>
+</html>

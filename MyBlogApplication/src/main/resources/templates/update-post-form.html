@@ -1,0 +1,28 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .form-container{
+            margin:auto;
+            width:90vw;
+            display : flex;
+            flex-direction:column;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>New Blog</title>
+</head>
+<body>
+<h1 style="text-align:center">New post</h1>
+
+<form th:action="@{/update-post}" th:object="${post}" method="post" class="form-container">
+    <input type="hidden" name="postId" th:value="${id}">
+    <input type="text" id="title" name="title" th:field="*{title}"/><br>
+    <input id="tag" type="text" th:name="tags" th:value="${#strings.listJoin(post.tagList.![name], ', ')}"/>
+    <textarea name="content" rows="40" th:field="*{content}"></textarea><br>
+    <button style="align-self:center" type="submit">update</button>
+</form>
+</body>
+</html>

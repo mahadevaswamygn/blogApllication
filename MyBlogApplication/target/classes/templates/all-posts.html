@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <style>
+    </style>
+</head>
+<body style="overflow-x:hidden;">
+<h1 style="position:relative;top:12px">My Blog Application</h1>
+<div sec:authorization="hasAnyAuthority('AUTHOR','ADMIN')"
+     th:if="${#authorization.expression('hasAnyAuthority(''AUTHOR'',''ADMIN'')')}">
+    <div style="display: flex;justify-content: right;position: relative;left: -98px;top: 28px;">
+        <a href="/create-post">
+            <button style="width:100px;height:30px;">Create Post</button>
+        </a>
+    </div>
+</div>
+<div>
+    <div style="display:flex;justify-content:right;position:relative;right:98px;top:-42px">
+        <a th:href="@{/login}">
+            <button style="width:100px;height:30px;" th:if="${loggedInUser}==False">Login</button>
+        </a>
+        <form th:action="@{/logout}" method="post">
+            <button style="width:100px;height:30px;" th:if="${loggedInUser}==True">Logout</button>
+        </form>
+    </div>
+</div>
+<div style="display:flex;justify-content:right;position:relative;right:160px">
+    <form th:action="@{'/page/'+${start}}" method="get">
+        <input placeholder="search" name="search" th:value="${search}" type="search" onchange="this.form.submit()"
+               style="width:256px;height:36px"/>
+        <input class="action" type="hidden" name="sortField" th:value="publishedAt">
+        <br><br>
+        <select name="sortDir" style="height:30px;width:103px;" onchange="this.form.submit()">
+            <option>Sort</option>
+            <option th:value="'asc'">asc</option>
+            <option th:value="'desc'">desc</option>
+        </select>
+    </form>
+</div>
+<div>
+    <form th:action="@{/posts-filter}" method="get" style="position:relative;left:0px;top:-57px;width:500px">
+
+        <div style="font-size: 26px;position: relative;top: -31px;width:86px;">
+            <span>Filters :</span>
+        </div>
+        <div>
+            <span style="font-size: 21px;position: relative;top: -16px;">Date :</span>
+            <input type="date" name="date" style="width:87px;height:25px;position: relative;top: -17px;">
+        </div>
+        <div>
+            <span style="font-size: 21;font-size: 21px;position: relative;top: -6px;">Author :</span>
+            <div>
+                <label th:each="author, authorIndex: ${allAuthors}">
+                    <input type="checkbox" name="authorName" th:value="${author}"/>
+                    <span th:text="${author}"></span>
+                    <br th:if="${authorIndex.count % 5 == 0}"/>
+                </label>
+            </div>
+
+        </div>
+        <div>
+            <span style="font-size: 21px;">Tags :</span>
+            <div>
+                <label th:each="tag, tagIndex : ${allTags}">
+                    <input type="checkbox" name="tagId" th:value="${tag.id}"/>
+                    <span th:text="${tag.name}"/>
+                    <br th:if="${tagIndex.count % 5 == 0}"/>
+                </label>
+            </div>
+        </div>
+        <input type="submit" value="Apply" style="position: relative;top: 14px; height: 25px;width: 65px;">
+    </form>
+</div>
+<div style="display:flex;flex-wrap:wrap;max-width:110vw;">
+    <div th:each="post:${postList}" style="min-width:500px;">
+        <a th:href="@{/show-post{id}(id=${post.id})}" style="text-decoration:none;color:black;">
+            <div style="width: 43vw; border: 2px solid black; margin: 20px; padding: 20px;">
+                <h3 th:text="${post.title}"></h3>
+                <span th:text="${post.author}+', '"></span>
+                <span th:text="${post.createdAt}"></span><br>
+
+                <div style="display:flex;">
+                    <span> Tags :</span>
+                    <div th:each="tag:${post.tagList}">
+                        <span th:text="${tag.name}+', '"></span>
+                    </div>
+                </div>
+                <p th:text="${post.excerpt}">
+                <div style="display:flex;justify-content:right">
+                    <div th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}">
+                        <div style="display:flex">
+                        <p align="right"><a th:href="@{/delete-post{id}(id=${post.id})}">
+                            <button>Delete</button>
+                        </a></p>
+                        <p align="right"><a th:href="@{/update-post{id}(id=${post.id})}">
+                            <button>update</button>
+                        </a></p>
+                        </div>
+                    </div>
+                    <div th:if="${#authorization.expression('hasAuthority(''AUTHOR'')') and user.name == post.author}">
+                        <div style="display:flex">
+                            <p align="right"><a th:href="@{/delete-post{id}(id=${post.id})}">
+                                <button>Delete</button>
+                            </a></p>
+                            <p align="right"><a th:href="@{/update-post{id}(id=${post.id})}">
+                                <button>update</button>
+                            </a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div th:if="${totalPages > 0}">
+    <div>
+        <a th:if="${start > 1}"
+           th:href="@{/page/{pageNumber}(pageNumber=${start - 1}, sortDir=${sortDirection}, search=${search}, limit=10)}">
+            Previous</a>
+    </div>
+    <div style="display:flex;justify-content:end;position:relative;right:80px">
+        <a th:if="${start < totalPages}"
+           th:href="@{/page/{pageNumber}(pageNumber=${start + 1}, sortDir=${sortDirection}, search=${search}, limit=10)}">Next </a>
+    </div>
+</div>
+</body>
+</html>

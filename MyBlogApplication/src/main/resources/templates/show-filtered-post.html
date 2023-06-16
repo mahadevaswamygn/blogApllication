@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Filterd Posts</title>
+</head>
+<body>
+<form th:action="@{/posts-filter}" method="get" style="position:relative;left:0px;top:4px;">
+
+    <div style="font-size: 26px;position: relative;top: -16px;">
+        <span>Filters :</span>
+    </div>
+    <div>
+        <span style="font-size: 21px;position: relative;top: -16px;">Date :</span>
+        <input type="date" name="date" style="width:87px;height:25px;position: relative;top: -17px;">
+    </div>
+    <div>
+        <span style="font-size: 21;font-size: 21px;position: relative;top: -6px;">Author :</span>
+        <div>
+            <label th:each="author, authorIndex: ${allAuthors}">
+                <input type="checkbox" name="authorName" th:value="${author}"/>
+                <span th:text="${author}"></span>
+                <br th:if="${authorIndex.count % 5 == 0}"/>
+            </label>
+        </div>
+
+    </div>
+    <div>
+        <span style="font-size: 21px;">Tags :</span>
+        <div>
+            <label th:each="tag, tagIndex : ${allTags}">
+                <input type="checkbox" name="tagId" th:value="${tag.id}"/>
+                <span th:text="${tag.name}"/>
+                <br th:if="${tagIndex.count % 5 == 0}"/>
+            </label>
+        </div>
+    </div>
+    <input type="submit" value="Apply" style="position: relative;top: 14px; height: 25px;width: 65px;">
+</form>
+<div style="display:flex;flex-wrap:wrap;max-width:110vw;">
+    <div th:each="post:${postList}" style="min-width:500px;">
+        <a th:href="@{/show-post{id}(id=${post.id})}" style="text-decoration:none;color:black;">
+            <div style="width: 43vw; border: 2px solid black; margin: 20px; padding: 20px;">
+                <h3 th:text="${post.title}"></h3>
+                <span th:text="${post.author}+', '"></span>
+                <span th:text="${post.createdAt}"></span><br>
+
+                <div style="display:flex;">
+                    <span> Tags :</span>
+                    <div th:each="tag:${post.tagList}">
+                        <span th:text="${tag.name}+', '"></span>
+                    </div>
+                </div>
+                <p th:text="${post.excerpt}"></p>
+                <div style="display:flex;justify-content:right">
+                    <p align="right"><a th:href="@{/delete-post{id}(id=${post.id})}">
+                        <button>Delete</button>
+                    </a></p>
+                    <p align="right"><a th:href="@{/update-post{id}(id=${post.id})}">
+                        <button>update</button>
+                    </a></p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+<div>
+    <a th:if="${start > 1}"
+       th:href="@{/posts-filter(date=${presentDate}, authorName=${presentAuthors},pageNo=${start - 1}, tagId=${presentTags}, start=${start - 1})}">Previous</a>
+    <a th:if="${start < totalPages}"
+       th:href="@{/posts-filter(date=${presentDate}, authorName=${presentAuthors},pageNo=${start + 1}, tagId=${presentTags}, start=${start + 1})}"
+       style="display:flex;justify-content:right;position:relative;right:98px;bottom:12px;">Next ></a>
+</div>
+</body>
+</html>
