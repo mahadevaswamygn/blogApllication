@@ -73,7 +73,6 @@ public class PostController {
     }
 
     @PostMapping("/create-post")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('AUTHOR')")
     public String createPost(@RequestParam("title") String title,
                              @RequestParam("content") String content,
                              @RequestParam("allTags") String tags,
